@@ -1,1 +1,1 @@
-# go_katas
+# gophercises found at https://gophercises.com/
