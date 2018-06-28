@@ -8,7 +8,7 @@ The CSV file should default to problems.csv (example shown below), but the user 
 The CSV file will be in a format like below, where the first column is a question and the second column in the same row is the answer to that question.
 
 5+5,10
-7+3,10
+7+3,10|
 1+1,2
 8+3,11
 1+2,3
