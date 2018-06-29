@@ -1,11 +1,21 @@
 package main
 
 import "fmt"
+import "flag"
 
 // import "encoding/csv"
 import "os"
 
+// global variable for csv flag
+var csv string
+
 func main() {
+
+	
+	flag.StringVar(&csv, "csv", "problems.csv", "the name of the csv to use")
+	flag.Parse()
+
+	fmt.Println(csv)
 
 	csv := getCsvName(os.Args)
 	fmt.Println(csv)
