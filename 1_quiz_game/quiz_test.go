@@ -45,7 +45,7 @@ func TestCanReadDataFromValidCsv(t *testing.T) {
 
 	for j, row := range data {
 		for i, item := range row {
-			assert.Equal (t, item, expected[j][i], "unexpected values read from CSV")
+			assert.Equal (t, expected[j][i], item,  "unexpected values read from CSV")
 		}
 	}
 }
@@ -59,7 +59,7 @@ func TestCsvFileIsMissing(t *testing.T) {
 	}
 
 	expected := "open testdata/missing.csv: no such file or directory"
-	assert.Equal (t, err.Error(), expected, "unexpected error message")
+	assert.Equal (t, expected, err.Error(), "unexpected error message")
 }
 
 func TestQuestionsNotInCsvFormat(t *testing.T) {
@@ -71,6 +71,6 @@ func TestQuestionsNotInCsvFormat(t *testing.T) {
 	}
 
 	expected := "Error: Questions and answers must be in a .csv file, received .txt"
-	assert.Equal (t, err.Error(), expected, "unexpected error message")
+	assert.Equal (t, expected, err.Error(), "unexpected error message")
 }
 
