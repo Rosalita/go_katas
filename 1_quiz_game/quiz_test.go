@@ -3,6 +3,9 @@ package main
 import "testing"
 import "flag"
 import "os"
+import "errors"
+
+import "github.com/stretchr/testify/assert"
 
 func TestMain(m *testing.M) {
 
@@ -12,10 +15,21 @@ func TestMain(m *testing.M) {
 
 }
 
-// to do:
-// refactor asserts with stretchr/testify
-// apply table based testing pattern to csv testsg
+// to do refactor length of responses into a test table
 
+func TestReadDataFromCsvErrors(t *testing.T){
+	var tests = []struct{
+		input string
+		err error 
+	}{
+		{"testdata/test.csv", nil},
+		{"testdata/helloworld.txt", errors.New("Error: Questions and answers must be in a .csv file, received .txt")},
+	}
+	for _, test := range tests {
+		_, e := readDataFromCsv(test.input); 
+		assert.Equal (t, e, test.err, "unexpected error returned")
+	}
+} 
 
 func TestCanReadDataFromValidCsv(t *testing.T) {
 	path := "testdata/test.csv"
@@ -31,9 +45,7 @@ func TestCanReadDataFromValidCsv(t *testing.T) {
 
 	for j, row := range data {
 		for i, item := range row {
-			if item != expected[j][i] {
-				t.Errorf("unexpected result: was expecting: %s, actual was: %s", expected[j][i], item)
-			}
+			assert.Equal (t, item, expected[j][i], "unexpected values read from CSV")
 		}
 	}
 }
@@ -47,9 +59,7 @@ func TestCsvFileIsMissing(t *testing.T) {
 	}
 
 	expected := "open testdata/missing.csv: no such file or directory"
-	if err.Error() != expected {
-		t.Errorf("unexpected result: was expecting: %s, actual was: %s", expected, err.Error())
-	}
+	assert.Equal (t, err.Error(), expected, "unexpected error message")
 }
 
 func TestQuestionsNotInCsvFormat(t *testing.T) {
@@ -61,8 +71,6 @@ func TestQuestionsNotInCsvFormat(t *testing.T) {
 	}
 
 	expected := "Error: Questions and answers must be in a .csv file, received .txt"
-	if err.Error() != expected {
-		t.Errorf("unexpected result: was expecting: %s, actual was: %s", expected, err.Error())
-	}
+	assert.Equal (t, err.Error(), expected, "unexpected error message")
 }
 

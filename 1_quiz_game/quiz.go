@@ -30,16 +30,19 @@ func readDataFromCsv(path string) ([][]string, error) {
 		log.Println(err)
 		return nil, err
 	}
+
 	file, err := os.Open(path)
 	if err != nil {
 		log.Println(err)
 		return nil, err
 	}
 	defer file.Close()
+
 	reader := csv.NewReader(file)
 	data, err := reader.ReadAll()
 	if err != nil {
 		log.Println(err)
+		return nil, err
 	}
 	log.Printf("successfully read %d lines from %s \n", len(data), path)
 	return data, nil
