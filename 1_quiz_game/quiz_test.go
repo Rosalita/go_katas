@@ -17,7 +17,7 @@ func TestMain(m *testing.M) {
 
 }
 
-func TestReadDataFromCsvErrors(t *testing.T) {
+func TestReadFromCsvErrors(t *testing.T) {
 	var tests = []struct {
 		input string
 		err   error
@@ -26,29 +26,29 @@ func TestReadDataFromCsvErrors(t *testing.T) {
 		{"testdata/helloworld.txt", errors.New("Error: Questions and answers must be in a .csv file, received .txt")},
 	}
 	for _, test := range tests {
-		_, e := readDataFromCsv(test.input)
-		assert.Equal(t, e, test.err, "unexpected error returned")
+		_, e := readFromCsv(test.input)
+		assert.Equal(t, test.err, e, "unexpected error returned")
 	}
 }
 
-func TestReadDataFromCsvReturnsDataOfCorrectLength(t *testing.T) {
+func TestReadFromCsvReturnsDataOfCorrectLength(t *testing.T) {
 	var tests = []struct {
 		input      string
-		dataLength int
+		quizLength int
 	}{
 		{"testdata/test.csv", 2},
 		{"testdata/missing.csv", 0},
 		{"testdata/helloworld.txt", 0},
 	}
 	for _, test := range tests {
-		data, _ := readDataFromCsv(test.input)
-		assert.Equal(t, len(data), test.dataLength, "unexpected data returned")
+		quizData, _ := readFromCsv(test.input)
+		assert.Equal(t, len(quizData), test.quizLength, "unexpected data returned")
 	}
 }
 
-func TestCanReadDataFromValidCsv(t *testing.T) {
+func TestCanReadQuizFromValidCsv(t *testing.T) {
 	path := "testdata/test.csv"
-	data, _ := readDataFromCsv(path)
+	data, _ := readFromCsv(path)
 
 	expected_row1 := []string{"1 + 1", "2"}
 	expected_row2 := []string{"Why can't spaghetti code?", "Impasta syndrome"}
@@ -63,7 +63,7 @@ func TestCanReadDataFromValidCsv(t *testing.T) {
 
 func TestCsvFileIsMissing(t *testing.T) {
 	path := "testdata/missing.csv"
-	_, err := readDataFromCsv(path)
+	_, err := readFromCsv(path)
 
 	expected := "open testdata/missing.csv: no such file or directory"
 	assert.Equal(t, expected, err.Error(), "unexpected error message")
@@ -76,10 +76,28 @@ func mockSomeIncorrectAnswers() string {
 }
 
 func TestGetAnswers(t *testing.T) {
-	data, _ := readDataFromCsv("testdata/test.csv")
+	data, _ := readFromCsv("testdata/test.csv")
 	result := getAnswers(data, mockSomeIncorrectAnswers)
 	expected := []string{"answer 1", "answer 2"}
 
 	assert.Equal(t, expected[0], result[0], "unexpected answer received")
 	assert.Equal(t, expected[1], result[1], "unexpected answer received")
+}
+
+func TestMarkQuiz(t *testing.T) {
+	testQuestions, _ := readFromCsv("testdata/test.csv")
+	incorrectAnswers := []string{"fish", "chips"}
+	var tests = []struct {
+		questions [][]string
+		answers   []string
+		score     int
+	}{
+		{testQuestions, incorrectAnswers, 0},
+	}
+	for _, test := range tests {
+		score := markQuiz(testQuestions, incorrectAnswers)
+		assert.Equal(t, len(test.questions), len(test.answers), "number of questions and number of answers do not match")
+		assert.Equal(t, test.score, score, "unexpected number of correct answers")
+	}
+
 }

@@ -16,18 +16,18 @@ func main() {
 	flag.StringVar(&csvPath, "csv", "problems.csv", "path to csv file")
 	flag.Parse()
 
-	data, err := readDataFromCsv(csvPath)
+	quizData, err := readFromCsv(csvPath)
 	if err != nil {
 		return
 	}
 
-	answers := getAnswers(data, getUserInput)
-
-	fmt.Printf(answers[0])
+	answers := getAnswers(quizData, getUserInput)
+	score := markQuiz(quizData, answers)
+	fmt.Printf("Your score was %d out of %d correct\n", score, len(quizData))
 
 }
 
-func readDataFromCsv(path string) ([][]string, error) {
+func readFromCsv(path string) ([][]string, error) {
 	if path[len(path)-4:] != ".csv" {
 		errMsg := "Error: Questions and answers must be in a .csv file, received " + path[len(path)-4:]
 		err := errors.New(errMsg)
@@ -43,24 +43,23 @@ func readDataFromCsv(path string) ([][]string, error) {
 	defer file.Close()
 
 	reader := csv.NewReader(file)
-	data, err := reader.ReadAll()
+	quizData, err := reader.ReadAll()
 	if err != nil {
 		log.Println(err)
 		return nil, err
 	}
-	log.Printf("successfully read %d lines from %s \n", len(data), path)
-	return data, nil
+	log.Printf("successfully read %d lines from %s \n", len(quizData), path)
+	return quizData, nil
 }
 
-func getAnswers(data [][]string, getInput inputGetter) []string {
+func getAnswers(quizData [][]string, getInput inputGetter) []string {
 
-	answers := make([]string, len(data))
+	answers := make([]string, len(quizData))
 
-	for i, v := range data {
-		fmt.Printf("Question %d of %d:\n", i+1, len(data))
+	for i, v := range quizData {
+		fmt.Printf("Question %d of %d:\n", i+1, len(quizData))
 		fmt.Println(v[0])
 		a := getInput()
-		fmt.Println(a)
 		answers[i] = a
 	}
 	return answers
@@ -73,4 +72,13 @@ func getUserInput() string {
 	return text
 }
 
-//func markQuiz(data [][]string, answers)(totalq, score,)
+func markQuiz(quizData [][]string, answers []string) int {
+	counter := 0
+
+	for i, _ := range quizData {
+		if quizData[i][1] == answers[i] {
+			counter++
+		}
+	}
+	return counter
+}
