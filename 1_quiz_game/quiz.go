@@ -55,12 +55,20 @@ func readDataFromCsv(path string) ([][]string, error) {
  func getAnswers(data [][]string, getInput inputGetter) []string {
 	
   answers := make([]string, len(data))
+
+//   fmt.Println("length of data is")
+//   fmt.Println(len(data))
+//   for i, v := range answers{
+// 	  fmt.Println("answers currently are")
+// 	  fmt.Println(i, v)
+//   }
+
   for i, v := range data{
 		fmt.Printf("Question %d of %d:\n", i+1, len(data))
 		fmt.Println(v[0])
 		a := getInput()
-	
-	answers = append(answers, a)
+		fmt.Println(a)
+		answers[i] = a
 	}
   return answers
  }
