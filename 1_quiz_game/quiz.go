@@ -9,6 +9,8 @@ import "fmt"
 
 var csvPath string = ""
 
+type inputGetter func() string 
+
 func main() {
 
 	flag.StringVar(&csvPath, "csv", "problems.csv", "path to csv file")
@@ -19,7 +21,9 @@ func main() {
 		return
 	}
 
-	startQuiz(data)
+	answers := getAnswers(data, getUserInput)
+
+	fmt.Printf(answers[0])
 
 }
 
@@ -48,23 +52,35 @@ func readDataFromCsv(path string) ([][]string, error) {
 	return data, nil
 }
 
-func startQuiz(data [][]string){
+ func getAnswers(data [][]string, getInput inputGetter) []string {
+	
+  answers := make([]string, len(data))
   for i, v := range data{
 		fmt.Printf("Question %d of %d:\n", i+1, len(data))
 		fmt.Println(v[0])
-		a := getAnswer()
-    fmt.Println(a)
+		a := getInput()
+	
+	answers = append(answers, a)
 	}
-}
+  return answers
+ }
 
-func getAnswer()string{
+
+ func getUserInput() string{
 	fmt.Printf("answer:" )
 	text := ""
 	fmt.Scanln(&text)
 	return text
+	}
 
-}
+// func getUserInput()string{
+// 	fmt.Printf("answer:" )
+// 	text := ""
+// 	fmt.Scanln(&text)
+// 	return text
+// }
 
+//func markQuiz(data [][]string, answers)(totalq, score,)
 	
 
 

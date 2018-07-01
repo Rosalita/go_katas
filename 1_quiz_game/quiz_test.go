@@ -5,6 +5,7 @@ import "flag"
 import "os"
 import "errors"
 import "github.com/stretchr/testify/assert"
+import "fmt"
 
 func TestMain(m *testing.M) {
 
@@ -65,3 +66,18 @@ func TestCsvFileIsMissing(t *testing.T) {
 	expected := "open testdata/missing.csv: no such file or directory"
 	assert.Equal(t, expected, err.Error(), "unexpected error message")
 }
+
+
+func mockGetUserInput() string{
+    number := 1
+	answer := fmt.Sprintf("answer %d", number)
+	return answer
+}
+
+func TestGetAnswers(t *testing.T){
+	data, _ := readDataFromCsv("testdata/test.csv")
+	answers:= getAnswers(data, mockGetUserInput)
+	fmt.Println(answers[0])
+	fmt.Println(answers[1])
+}
+
