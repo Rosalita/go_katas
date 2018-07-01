@@ -7,7 +7,7 @@ import "errors"
 import "github.com/stretchr/testify/assert"
 import "fmt"
 
-var globalAnswerNumber  = 1
+var globalAnswerNumber = 1
 
 func TestMain(m *testing.M) {
 
@@ -69,18 +69,17 @@ func TestCsvFileIsMissing(t *testing.T) {
 	assert.Equal(t, expected, err.Error(), "unexpected error message")
 }
 
-func mockSomeIncorrectAnswers() string{
+func mockSomeIncorrectAnswers() string {
 	answer := fmt.Sprintf("answer %d", globalAnswerNumber)
-	globalAnswerNumber ++
+	globalAnswerNumber++
 	return answer
 }
 
-func TestGetAnswers(t *testing.T){
+func TestGetAnswers(t *testing.T) {
 	data, _ := readDataFromCsv("testdata/test.csv")
-	result:= getAnswers(data, mockSomeIncorrectAnswers)
+	result := getAnswers(data, mockSomeIncorrectAnswers)
 	expected := []string{"answer 1", "answer 2"}
 
 	assert.Equal(t, expected[0], result[0], "unexpected answer received")
 	assert.Equal(t, expected[1], result[1], "unexpected answer received")
 }
-

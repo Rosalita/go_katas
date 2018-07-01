@@ -9,7 +9,7 @@ import "fmt"
 
 var csvPath string = ""
 
-type inputGetter func() string 
+type inputGetter func() string
 
 func main() {
 
@@ -30,7 +30,7 @@ func main() {
 func readDataFromCsv(path string) ([][]string, error) {
 	if path[len(path)-4:] != ".csv" {
 		errMsg := "Error: Questions and answers must be in a .csv file, received " + path[len(path)-4:]
-		err:= errors.New(errMsg)
+		err := errors.New(errMsg)
 		log.Println(err)
 		return nil, err
 	}
@@ -52,32 +52,25 @@ func readDataFromCsv(path string) ([][]string, error) {
 	return data, nil
 }
 
- func getAnswers(data [][]string, getInput inputGetter) []string {
-	
-  answers := make([]string, len(data))
+func getAnswers(data [][]string, getInput inputGetter) []string {
 
-  for i, v := range data{
+	answers := make([]string, len(data))
+
+	for i, v := range data {
 		fmt.Printf("Question %d of %d:\n", i+1, len(data))
 		fmt.Println(v[0])
 		a := getInput()
 		fmt.Println(a)
 		answers[i] = a
 	}
-  return answers
- }
+	return answers
+}
 
-
- func getUserInput() string{
-	fmt.Printf("answer:" )
+func getUserInput() string {
+	fmt.Printf("answer:")
 	text := ""
 	fmt.Scanln(&text)
 	return text
-	}
-
-
+}
 
 //func markQuiz(data [][]string, answers)(totalq, score,)
-	
-
-
-
