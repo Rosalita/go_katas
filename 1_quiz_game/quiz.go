@@ -56,13 +56,6 @@ func readDataFromCsv(path string) ([][]string, error) {
 	
   answers := make([]string, len(data))
 
-//   fmt.Println("length of data is")
-//   fmt.Println(len(data))
-//   for i, v := range answers{
-// 	  fmt.Println("answers currently are")
-// 	  fmt.Println(i, v)
-//   }
-
   for i, v := range data{
 		fmt.Printf("Question %d of %d:\n", i+1, len(data))
 		fmt.Println(v[0])
@@ -81,12 +74,7 @@ func readDataFromCsv(path string) ([][]string, error) {
 	return text
 	}
 
-// func getUserInput()string{
-// 	fmt.Printf("answer:" )
-// 	text := ""
-// 	fmt.Scanln(&text)
-// 	return text
-// }
+
 
 //func markQuiz(data [][]string, answers)(totalq, score,)
 	
