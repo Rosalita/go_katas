@@ -6,6 +6,7 @@ import "os"
 import "log"
 import "errors"
 import "fmt"
+import "strings"
 
 var csvPath string = ""
 
@@ -76,7 +77,10 @@ func markQuiz(quizData [][]string, answers []string) int {
 	counter := 0
 
 	for i, _ := range quizData {
-		if quizData[i][1] == answers[i] {
+		quizAnswer := strings.ToLower(quizData[i][1])
+		userAnswer := strings.ToLower(answers[i])
+
+		if userAnswer == quizAnswer {
 			counter++
 		}
 	}

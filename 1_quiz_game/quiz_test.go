@@ -87,15 +87,20 @@ func TestGetAnswers(t *testing.T) {
 func TestMarkQuiz(t *testing.T) {
 	testQuestions, _ := readFromCsv("testdata/test.csv")
 	incorrectAnswers := []string{"fish", "chips"}
+	correctAnswers := []string{"2", "Impasta syndrome"}
+	allCapsCorrectAnswers := []string{"2", "IMPASTA SYNDROME"}
+
 	var tests = []struct {
 		questions [][]string
 		answers   []string
 		score     int
 	}{
 		{testQuestions, incorrectAnswers, 0},
+		{testQuestions, correctAnswers, 2},
+		{testQuestions, allCapsCorrectAnswers, 2},
 	}
 	for _, test := range tests {
-		score := markQuiz(testQuestions, incorrectAnswers)
+		score := markQuiz(testQuestions, test.answers)
 		assert.Equal(t, len(test.questions), len(test.answers), "number of questions and number of answers do not match")
 		assert.Equal(t, test.score, score, "unexpected number of correct answers")
 	}
