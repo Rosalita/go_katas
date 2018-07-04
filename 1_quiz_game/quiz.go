@@ -1,19 +1,24 @@
 package main
 
-import "flag"
-import "encoding/csv"
-import "os"
-import "log"
-import "errors"
-import "fmt"
-import "strings"
+import (
+	"encoding/csv"
+	"errors"
+	"flag"
+	"fmt"
+	"log"
+	"os"
+	"strings"
+	"time"
+)
 
-var csvPath string = ""
+var csvPath string
+var limit int
 
 type inputGetter func() string
 
 func main() {
 
+	flag.IntVar(&limit, "limit", 30, "a time limit for answering the quiz")
 	flag.StringVar(&csvPath, "csv", "problems.csv", "path to csv file")
 	flag.Parse()
 
@@ -22,10 +27,12 @@ func main() {
 		return
 	}
 
+	fmt.Println("Press <Enter> to start quiz")
+	fmt.Scanln()
+
 	answers := getAnswers(quizData, getUserInput)
 	score := markQuiz(quizData, answers)
 	fmt.Printf("Your score was %d out of %d correct\n", score, len(quizData))
-
 }
 
 func readFromCsv(path string) ([][]string, error) {
@@ -56,12 +63,25 @@ func readFromCsv(path string) ([][]string, error) {
 func getAnswers(quizData [][]string, getInput inputGetter) []string {
 
 	answers := make([]string, len(quizData))
+	timer := time.NewTimer(time.Duration(limit) * time.Second)
 
 	for i, v := range quizData {
 		fmt.Printf("Question %d of %d:\n", i+1, len(quizData))
 		fmt.Println(v[0])
-		a := getInput()
-		answers[i] = a
+
+		answerCh := make(chan string)
+		go func() {
+			a := getInput()
+			answerCh <- a
+		}()
+		select {
+		case <-timer.C:
+			fmt.Println("\n *** Time up ***")
+			return answers
+		case a := <-answerCh:
+			answers[i] = a
+
+		}
 	}
 	return answers
 }
