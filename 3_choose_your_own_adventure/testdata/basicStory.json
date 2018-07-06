@@ -1,0 +1,27 @@
+{
+  "intro": {
+    "title": "Test Intro",
+    "story": [
+      "Para 1",
+      "Para 2"
+    ],
+    "options": [
+      {
+        "text": "Option 1",
+        "arc": "Chapter 1"
+      }
+    ]
+  },
+  "Chapter 1": {
+    "title": "Chapter 1",
+    "story": [
+      "Chapter1 Para1"
+    ],
+    "options": [
+      {
+        "text": "Option 2",
+        "arc": "Chapter 2"
+      }
+    ]
+  }
+}
