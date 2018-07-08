@@ -5,6 +5,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"log"
 	"testing"
+	"net/http"
+	"net/http/httptest"
 )
 
 func TestGenerateStory(t *testing.T) {
@@ -37,4 +39,19 @@ func TestGenerateStoryLogsErrors(t *testing.T) {
 	shouldContain := "no such file or directory"
 	actual := buffer.String()
 	assert.Contains(t, actual, shouldContain, "unexpected log message")
+}
+
+func TestCanRenderWebPages(t *testing.T){
+	
+		request, err := http.NewRequest("GET", "http://localhost:8080/", nil)
+		if err != nil {
+			t.Fatal(err)
+		}
+	
+		resrecorder := httptest.NewRecorder()
+		handler := http.HandlerFunc(handler)
+	
+		handler.ServeHTTP(resrecorder, request)
+			
+		assert.Equal(t, resrecorder.Code, http.StatusOK, "Unable to render webpage returned status code: %v expected: %v", resrecorder.Code, http.StatusOK)
 }

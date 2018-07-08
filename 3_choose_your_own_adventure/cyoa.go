@@ -46,15 +46,19 @@ func generateStory(pathToJSON string) Story {
 
 func handler(w http.ResponseWriter, r *http.Request) {
 
+	chapterToRender := r.URL.Path[1:]
+
+	if chapterToRender == "" {
+		chapterToRender = "intro"
+	}
+
 	t, err := template.ParseFiles("story.html")
 
 	if err != nil {
 		log.Print("template parsing error: ", err)
 	}
 
-	introChapter := story["intro"]
-
-	err = t.Execute(w, introChapter)
+	err = t.Execute(w, story[chapterToRender])
 
 	if err != nil {
 		log.Print("template executing error: ", err)
